@@ -20,8 +20,9 @@ void *Consumer(); // Make Declaration of Consumer
 /*sem_t empty, full; //Declare semaphores to be used
 int data;*/ // data variable
 
-int buffer[10];
-int count = 0; //variables globales
+char buffer[10];
+int count; //variables globales
+char flag[10] = {1,1,1,1,1,1,1,1,1,1};
 
 int main(int argc, char* argv[])
 {
@@ -83,7 +84,7 @@ int main(int argc, char* argv[])
     srand(time(NULL));
     pthread_t ptid;
     pthread_t ctid[THREAD_NUM];
-    printf("\nMain Started");
+    printf("Main Started\n");
     sem_init(&semEmpty, 0, 10);
     sem_init(&semFull, 0, 0);
     pthread_create(&ptid, NULL, &Producer, NULL);
@@ -122,9 +123,9 @@ void *Producer()
     printf("\nProducer id is %ld\n",pthread_self()); //print thread id
 
     
-    while(1){
+    
 
-        int x = rand() % 10;
+        char x[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'} /*rand() % 10*/;
         sleep(1);
 
         sem_wait(&semEmpty);
@@ -132,13 +133,17 @@ void *Producer()
         pthread_mutex_lock(&mutexBuffer);
         
         //add to the buffer
-        if(count < 10){
-            buffer[count] = x;
+        /*if(count < 10){
+            buffer[count] = x[count];
             count++;
+        }*/
+
+        for(count = 0; count < 10; count++){
+            buffer[count] = x[count];
         }
         pthread_mutex_unlock(&mutexBuffer);
         sem_post(&semFull);
-    }
+    
 /*
     for(produced=0;produced<10;produced++)
     {
@@ -160,8 +165,9 @@ void *Consumer(/*int citas*/)
     //int consumed, total=0;
 
     while (1) {
-        int y;
+        char y;
 
+        
         // Remove from the buffer
         sem_wait(&semFull);
         pthread_mutex_lock(&mutexBuffer);
@@ -171,8 +177,47 @@ void *Consumer(/*int citas*/)
         sem_post(&semEmpty);
 
         // Consume
-        printf("Got %d\n", y);
-        sleep(1);
+        //printf("Paciente siendo asistido por %c\n", y);
+
+        if(y == 'a'){
+            flag[0] = 0;
+            printf("Paciente siendo atendido por Dr.A \n");
+        }else if(y == 'b'){
+            flag[1] = 0;
+            printf("Paciente siendo atendido por Dr.B \n");
+        }else if(y == 'c'){
+            flag[2] = 0;
+            printf("Paciente siendo atendido por Dr.C \n");
+        }else if(y == 'd'){
+            flag[3] = 0;
+            printf("Paciente siendo atendido por Dr.D \n");
+        }else if(y == 'e'){
+            flag[4] = 0;
+            printf("Paciente siendo atendido por Dr.E \n");
+        }else if(y == 'f'){
+            flag[5] = 0;
+            printf("Paciente siendo atendido por Dr.F \n");
+        }else if(y == 'g'){
+            flag[6] = 0;
+            printf("Paciente siendo atendido por Dr.G \n");
+        }else if(y == 'h'){
+            flag[7] = 0;
+            printf("Paciente siendo atendido por Dr.H \n");
+        }else if(y == 'i'){
+            flag[8] = 0;
+            printf("Paciente siendo atendido por Dr.I \n");
+        }else if(y == 'j'){
+            flag[9] = 0;
+            printf("Paciente siendo atendido por Dr.J \n");
+        }
+
+        sleep(10);
+
+        for(int i = 0; i < 10; i++){
+            flag[i] = 1;
+        }
+        
+        break;
     }
 
 /*
